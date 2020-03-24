@@ -2,21 +2,11 @@
 
 from .defaults import Constants, Regions, RateLos
 
-delaware = 564696
-chester = 519293
-montgomery = 826075
-bucks = 628341
-philly = 1581000
+Houston = 7100000
 
 DEFAULTS = Constants(
     # EDIT YOUR DEFAULTS HERE
-    region=Regions(
-        delaware=delaware,
-        chester=chester,
-        montgomery=montgomery,
-        bucks=bucks,
-        philly=philly,
-    ),
+    region=Houston,
     current_hospitalized=6,
     doubling_time=6,
     known_infected=157,
