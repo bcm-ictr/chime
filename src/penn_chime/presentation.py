@@ -32,26 +32,25 @@ def display_header(st, m, p):
         if m.detection_probability
         else "unknown"
     )
+#     <link rel="stylesheet" href="https://www1.pennmedicine.org/styles/shared/penn-medicine-header.css">
+# <div class="penn-medicine-header__content">
+#     <a href="https://www.pennmedicine.org" class="penn-medicine-header__logo"
+#         title="Go to the Penn Medicine home page">Penn Medicine</a>
+#     <a id="title" class="penn-medicine-header__title">Penn Medicine - COVID-19 Hospital Impact Model for Epidemics</a>
+# </div>
+
     st.markdown(
         """
-<link rel="stylesheet" href="https://www1.pennmedicine.org/styles/shared/penn-medicine-header.css">
-
 <div class="penn-medicine-header__content">
-    <a href="https://www.pennmedicine.org" class="penn-medicine-header__logo"
-        title="Go to the Penn Medicine home page">Penn Medicine</a>
-    <a id="title" class="penn-medicine-header__title">Penn Medicine - COVID-19 Hospital Impact Model for Epidemics</a>
+    <h1>BCM - COVID-19 Hospital Impact Model for Epidemics</h1>
 </div>
     """,
         unsafe_allow_html=True,
     )
-    st.markdown(
-        """**IMPORTANT NOTICE**: Admissions and Census calculations were previously **undercounting**. Please update your reports generated before """ + p.change_date() + """. See more about changes [here](https://github.com/CodeForPhilly/chime/labels/models)."""
-    )
-    st.markdown(
-        """*This tool was developed by the [Predictive Healthcare team](http://predictivehealthcare.pennmedicine.org/) at
-    Penn Medicine. For questions on how to use this tool see the [User docs](https://code-for-philly.gitbook.io/chime/). Code can be found on [Github](https://github.com/CodeForPhilly/chime).
-    Join our [Slack channel](https://codeforphilly.org/chat?channel=covid19-chime-penn) if you would like to get involved!*"""
-    )
+    # st.markdown(
+    #     """**IMPORTANT NOTICE**: Admissions and Census calculations were previously **undercounting**. Please update your reports generated before """ + p.change_date() + """. See more about changes [here](https://github.com/CodeForPhilly/chime/labels/models)."""
+    # )
+
 
     st.markdown(
         """The estimated number of currently infected individuals is **{total_infections:.0f}**. The **{initial_infections}**
@@ -365,7 +364,20 @@ def write_footer(st):
 * We would like to recognize the valuable assistance in consultation and review of model assumptions by Michael Z. Levy, PhD, Associate Professor of Epidemiology, Department of Biostatistics, Epidemiology and Informatics at the Perelman School of Medicine
     """
     )
-    st.markdown("© 2020, The Trustees of the University of Pennsylvania")
+    st.markdown(
+        """*This tool was originally developed by the [Predictive Healthcare team](http://predictivehealthcare.pennmedicine.org/) at
+    Penn Medicine. For questions on how to use this tool see the [User docs](https://code-for-philly.gitbook.io/chime/). Code can be found on [Github](https://github.com/CodeForPhilly/chime).
+    Join our [Slack channel](https://codeforphilly.org/chat?channel=covid19-chime-penn) if you would like to get involved!*"""
+    )
+    st.markdown("""© 2020, This work is derived from the [CodeForPhilly/chime](chime) project from the University of Pennsylvania,
+    and has been adapted for the Greater Houston Area by [the Institute for Clinical and Translational Research at the Baylor College of Medicine](https://www.bcm.edu/research/office-of-research/clinical-and-translational-research).""")
+
+#     <link rel="stylesheet" href="https://www1.pennmedicine.org/styles/shared/penn-medicine-header.css">
+# <div class="penn-medicine-header__content">
+#     <a href="https://www.pennmedicine.org" class="penn-medicine-header__logo"
+#         title="Go to the Penn Medicine home page">Penn Medicine</a>
+#     <a id="title" class="penn-medicine-header__title">Penn Medicine - COVID-19 Hospital Impact Model for Epidemics</a>
+# </div>
 
 
 def show_additional_projections(
