@@ -41,10 +41,12 @@ def display_header(st, m, p):
 
     st.markdown(
         """
-        <a href="http://bcm.edu" style="width:32;height:32;"
-        title="Go to the BCM home page"><img src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
 <div class="penn-medicine-header__content">
-    <h1>BCM - COVID-19 Hospital Impact Model for Epidemics</h1>
+    <h1>
+        <a href="http://bcm.edu" 
+        title="Go to the BCM home page"><img valign="top" width="32" height="32" src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
+BCM - COVID-19 Hospital Impact Model for Epidemics
+</h1>
 </div>
     """,
         unsafe_allow_html=True,
