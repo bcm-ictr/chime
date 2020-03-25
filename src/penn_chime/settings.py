@@ -10,7 +10,7 @@ DEFAULTS = Constants(
         houston=Houston,
     ),
     current_hospitalized=6,
-    doubling_time=6,
+    doubling_time=7,
     known_infected=157,
     n_days=60,
     market_share=0.15,
