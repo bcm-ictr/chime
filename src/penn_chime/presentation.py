@@ -66,7 +66,7 @@ An initial doubling time of **{doubling_time}** days and a recovery time of **{r
 **{r_naught:.2f}**.
 
 **Mitigation**: A **{relative_contact_rate:.0%}** reduction in social contact after the onset of the
-outbreak reduces the doubling time to **{doubling_time_t:.1f}** days, implying an effective $R_t$ of **${r_t:.2f}$**.
+outbreak **{impact_statement:s} {doubling_time_t:.1f}** days, implying an effective $R_t$ of **${r_t:.2f}$**.
 """.format(
             total_infections=m.infected,
             initial_infections=p.known_infected,
@@ -80,7 +80,8 @@ outbreak reduces the doubling time to **{doubling_time_t:.1f}** days, implying a
             doubling_time=p.doubling_time,
             relative_contact_rate=p.relative_contact_rate,
             r_t=m.r_t,
-            doubling_time_t=m.doubling_time_t,
+            doubling_time_t=abs(m.doubling_time_t),
+            impact_statement=("halves the infections every" if m.r_t < 1 else "reduces the doubling time to")
         )
     )
 
@@ -345,19 +346,8 @@ $$\\beta = (g + \\gamma)$$.
 def write_definitions(st):
     st.subheader("Guidance on Selecting Inputs")
     st.markdown(
-        """* **Hospitalized COVID-19 Patients:** The number of patients currently hospitalized with COVID-19 **at your hospital(s)**. This number is used in conjunction with Hospital Market Share and Hospitalization % to estimate the total number of infected individuals in your region.
-* **Doubling Time (days):** This parameter drives the rate of new cases during the early phases of the outbreak. The American Hospital Association currently projects doubling rates between 7 and 10 days. This is the doubling time you expect under status quo conditions. To account for reduced contact and other public health interventions, modify the _Social distancing_ input.
-* **Social distancing (% reduction in person-to-person physical contact):** This parameter allows users to explore how reduction in interpersonal contact & transmission (hand-washing) might slow the rate of new infections. It is your estimate of how much social contact reduction is being achieved in your region relative to the status quo. While it is unclear how much any given policy might affect social contact (eg. school closures or remote work), this parameter lets you see how projections change with percentage reductions in social contact.
-* **Hospitalization %(total infections):** Percentage of **all** infected cases which will need hospitalization.
-* **ICU %(total infections):** Percentage of **all** infected cases which will need to be treated in an ICU.
-* **Ventilated %(total infections):** Percentage of **all** infected cases which will need mechanical ventilation.
-* **Hospital Length of Stay:** Average number of days of treatment needed for hospitalized COVID-19 patients.
-* **ICU Length of Stay:** Average number of days of ICU treatment needed for ICU COVID-19 patients.
-* **Vent Length of Stay:**  Average number of days of ventilation needed for ventilated COVID-19 patients.
-* **Hospital Market Share (%):** The proportion of patients in the region that are likely to come to your hospital (as opposed to other hospitals in the region) when they get sick. One way to estimate this is to look at all of the hospitals in your region and add up all of the beds. The number of beds at your hospital divided by the total number of beds in the region times 100 will give you a reasonable starting estimate.
-* **Regional Population:** Total population size of the catchment region of your hospital(s).
-* **Currently Known Regional Infections**: The number of infections reported in your hospital's catchment region. This is only used to compute detection rate - **it will not change projections**. This input is used to estimate the detection rate of infected individuals.
-    """
+        """**This information has been moved to the 
+[User Documentation](https://code-for-philly.gitbook.io/chime/what-is-chime/parameters#guidance-on-selecting-inputs)**"""
     )
 
 
@@ -407,12 +397,9 @@ def show_additional_projections(
 
 
 def draw_projected_admissions_table(
-    st, projection_admits: pd.DataFrame, labels, as_date: bool = False, daily_count: bool = False,
+    st, projection_admits: pd.DataFrame, labels, day_range, as_date: bool = False
 ):
-    if daily_count == True:
-        admits_table = projection_admits[np.mod(projection_admits.index, 1) == 0].copy()
-    else:
-        admits_table = projection_admits[np.mod(projection_admits.index, 7) == 0].copy()
+    admits_table = projection_admits[np.mod(projection_admits.index, day_range) == 0].copy()
     admits_table["day"] = admits_table.index
     admits_table.index = range(admits_table.shape[0])
     admits_table = admits_table.fillna(0).astype(int)
@@ -426,11 +413,8 @@ def draw_projected_admissions_table(
     return None
 
 
-def draw_census_table(st, census_df: pd.DataFrame, labels, as_date: bool = False, daily_count: bool = False):
-    if daily_count == True:
-        census_table = census_df[np.mod(census_df.index, 1) == 0].copy()
-    else:
-        census_table = census_df[np.mod(census_df.index, 7) == 0].copy()
+def draw_census_table(st, census_df: pd.DataFrame, labels, day_range, as_date: bool = False):
+    census_table = census_df[np.mod(census_df.index, day_range) == 0].copy()
     census_table.index = range(census_table.shape[0])
     census_table.loc[0, :] = 0
     census_table = census_table.dropna().astype(int)
