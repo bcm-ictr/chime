@@ -44,7 +44,7 @@ def display_header(st, m, p):
 <div class="penn-medicine-header__content">
     <h1>
         <a href="http://bcm.edu" 
-        title="Go to the BCM home page"><img valign="top" width="32" height="32" src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
+        title="Go to the BCM home page"><img valign="top" width="64" height="64" src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
 BCM - COVID-19 Hospital Impact Model for Epidemics
 </h1>
 </div>
