@@ -1,7 +1,7 @@
 """effectful functions for streamlit io"""
 
 from typing import Optional
-
+import os
 import altair as alt  # type: ignore
 import numpy as np  # type: ignore
 import pandas as pd  # type: ignore
@@ -39,11 +39,12 @@ def display_header(st, m, p):
 #     <a id="title" class="penn-medicine-header__title">Penn Medicine - COVID-19 Hospital Impact Model for Epidemics</a>
 # </div>
 
-    st.markdown(
+    if os.environ['SITE'] == 'BCM':
+        st.markdown(
         """
 <div class="penn-medicine-header__content">
     <h1>
-        <a href="http://bcm.edu" 
+        <a href="http://bcm.edu"
         title="Go to the BCM home page"><img valign="top" width="64" height="64" src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
 BCM - COVID-19 Hospital Impact Model for Epidemics
 </h1>
@@ -51,6 +52,26 @@ BCM - COVID-19 Hospital Impact Model for Epidemics
     """,
         unsafe_allow_html=True,
     )
+    elif os.environ['SITE'] == 'METHODIST':
+        st.markdown(
+        """
+<div class="penn-medicine-header__content">
+    <h1>
+        <a href="http://bcm.edu"
+        title="Go to the Methodist home page"><img valign="top" height="64"
+        src="https://www.houstonmethodist.org/-/media/Images/Header-Images/logo.ashx?h=72&w=216&hash=C4A85BF6D599BC04FE120E1FE46B9BE0"></a>
+ COVID-19 Hospital Impact Model for Epidemics
+</h1>
+</div>
+    """,
+        unsafe_allow_html=True,
+    )
+    else:
+        raise ValueError(f"Invalid SITE {os.environ['SITE']}")
+
+    st.markdown("""
+        All sites: [BCM](http://0.0.0.0:8000), [Methodist](http://0.0.0.0:8001)
+    """)
     # st.markdown(
     #     """**IMPORTANT NOTICE**: Admissions and Census calculations were previously **undercounting**. Please update your reports generated before """ + p.change_date() + """. See more about changes [here](https://github.com/CodeForPhilly/chime/labels/models)."""
     # )
@@ -346,7 +367,7 @@ $$\\beta = (g + \\gamma)$$.
 def write_definitions(st):
     st.subheader("Guidance on Selecting Inputs")
     st.markdown(
-        """**This information has been moved to the 
+        """**This information has been moved to the
 [User Documentation](https://code-for-philly.gitbook.io/chime/what-is-chime/parameters#guidance-on-selecting-inputs)**"""
     )
 
