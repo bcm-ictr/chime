@@ -69,9 +69,9 @@ Methodist - COVID-19 Hospital Impact Model for Epidemics
     else:
         raise ValueError(f"Invalid SITE {os.environ['SITE']}")
 
-    st.markdown("""
-        All sites: [BCM](http://0.0.0.0:8000), [Methodist](http://0.0.0.0:8001)
-    """)
+    # st.markdown("""
+    #     All sites: [BCM](http://0.0.0.0:8000), [Methodist](http://0.0.0.0:8001)
+    # """)
     # st.markdown(
     #     """**IMPORTANT NOTICE**: Admissions and Census calculations were previously **undercounting**. Please update your reports generated before """ + p.change_date() + """. See more about changes [here](https://github.com/CodeForPhilly/chime/labels/models)."""
     # )
