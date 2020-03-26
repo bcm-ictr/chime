@@ -9,15 +9,10 @@ cd "$(dirname "$0")/.."
 
 script/bootstrap
 
-if [ ! -f ".env" ]; then
-    echo
-    echo "==> Initializing .env…"
-    cp .env.example .env
-fi
 
 echo
 echo "==> Loading .env…"
-set -o allexport; source .env; set +o allexport
+set -o allexport; source .env.$1; set +o allexport
 
 echo
 echo "==> Starting containers with docker-compose…"
