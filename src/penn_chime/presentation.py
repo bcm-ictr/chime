@@ -60,7 +60,7 @@ BCM - COVID-19 Hospital Impact Model for Epidemics
         <a href="http://bcm.edu"
         title="Go to the Methodist home page"><img valign="top" height="64"
         src="https://www.houstonmethodist.org/-/media/Images/Header-Images/logo.ashx?h=72&w=216&hash=C4A85BF6D599BC04FE120E1FE46B9BE0"></a>
- COVID-19 Hospital Impact Model for Epidemics
+Methodist - COVID-19 Hospital Impact Model for Epidemics
 </h1>
 </div>
     """,
