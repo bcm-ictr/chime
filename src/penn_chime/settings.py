@@ -28,7 +28,7 @@ elif os.environ['SITE'] == 'METHODIST':
         region=Regions(
             houston=Houston,
         ),
-        current_hospitalized=600,
+        current_hospitalized=6,
         doubling_time=7,
         known_infected=157,
         n_days=60,
