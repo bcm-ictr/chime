@@ -12,7 +12,7 @@ script/bootstrap
 
 echo
 echo "==> Loading .env…"
-set -o allexport; source .env.$1; set +o allexport
+set -o allexport; source .env; set +o allexport
 
 echo
 echo "==> Starting containers with docker-compose…"

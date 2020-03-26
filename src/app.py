@@ -12,6 +12,7 @@ from penn_chime.presentation import (
     draw_raw_sir_simulation_table,
     hide_menu_style,
     show_additional_projections,
+    show_references_used,
     show_more_info_about_this_tool,
     write_definitions,
     write_footer,
@@ -35,6 +36,11 @@ p = display_sidebar(st, DEFAULTS)
 m = SimSirModel(p)
 
 display_header(st, m, p)
+
+
+if st.checkbox("Show references that we used to justify the default parameters"):
+    notes = "We used information from ... to justify the default parameters"
+    show_references_used(st=st, model=m, parameters=p, defaults=DEFAULTS, notes=notes)
 
 if st.checkbox("Show more info about this tool"):
     notes = "The total size of the susceptible population will be the entire catchment area for Penn Medicine entities (HUP, PAH, PMC, CCH)"

@@ -262,6 +262,17 @@ def display_sidebar(st, d: Constants) -> Parameters:
         ventilated=RateLos(ventilated_rate, ventilated_los),
     )
 
+def show_references_used(st, model, parameters, defaults, notes: str=""):
+    st.subheader(
+        "References used for the default parameters"
+    )
+    st.markdown(
+        '''\
+* [Clinical Characteristics of 138 Hospitalized Patients With 2019 Novel Coronavirus–Infected Pneumonia in Wuhan, China](https://jamanetwork.com/journals/jama/fullarticle/2761044)
+  shows 10 days as hospital length of stay for Wuhan. We will use this parameter as default before data from local hospitcals become available.
+
+        '''
+    )
 
 def show_more_info_about_this_tool(st, model, parameters, defaults, notes: str = ""):
     """a lot of streamlit writing to screen."""
