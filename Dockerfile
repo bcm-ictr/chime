@@ -6,6 +6,6 @@ COPY README.md .
 COPY setup.py .
 COPY settings.cfg .
 COPY src src
-RUN pip install -q .
+RUN pip install .
 
 CMD ["streamlit", "run", "src/app.py"]
