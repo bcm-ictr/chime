@@ -6,9 +6,17 @@ set -e
 cd "$(dirname "$0")/.."
 
 
-script/bootstrap
+#script/bootstrap
 #script/-check-docker-compose
 
-echo
-echo "==> Rebuilding containers…"
-docker-compose up -d --build
+LOCALREV=$(git rev-parse HEAD)
+REMOTEREV=$(git ls-remote origin | cut -f1 | head -1)
+
+if [ $LOCALREV == $REMOTEREV ]; then
+   echo "NO UPDATE IS NECESSARY"
+else
+   echo
+   echo "==> Rebuilding containers…"
+   git pull
+   docker-compose up -d --build
+fi
