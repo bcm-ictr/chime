@@ -97,6 +97,7 @@ def display_header(st, m, p):
     # )
 
     infection_warning_str = ''
+    infected_population_warning_str = ''
     st.markdown(
         """The estimated number of currently infected individuals is **{total_infections:.0f}**. The **{initial_infections}**
     confirmed cases in the region imply a **{detection_prob_str}** rate of detection. This is based on current inputs for
