@@ -6,10 +6,6 @@
 set -e
 cd "$(dirname "$0")/.."
 
-
-script/bootstrap
-
-
 echo
 #echo "==> Loading .env…"
 #set -o allexport; source .env; set +o allexport
@@ -17,8 +13,3 @@ echo
 echo
 echo "==> Starting containers with docker-compose…"
 docker-compose up -d --build
-
-echo
-echo "==> App is now ready to go!"
-echo "    *Open http://localhost:${PORT}"
-echo
