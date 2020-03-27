@@ -22,9 +22,9 @@ common_doubling_time = 7
 common_n_days = 30
 common_hospital_length_of_stay = 11
 common_hospitalization_rate = 0.044    # 0.044 means 4.4%
-common_icu_rate = 0.0075
+common_icu_rate = 0.0132
 common_icu_legnth_of_stay = 10
-common_ventilated_rate = 0.005
+common_ventilated_rate = 0.012
 common_ventilated_length_of_stay = 10
 
 
