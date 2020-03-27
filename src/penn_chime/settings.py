@@ -5,7 +5,7 @@ import os
 
 
 
-# QUOTE: Chris Amos
+# QUOTE: Chris Amos #
 
 # According to the website, Harris county has a 43% reduction in travel. I will use that as a metric for base model for BSLMC,
 # which I expect matches well the average behavior.  For Harris Health, I will assume 23% reduction in social distancing and for
