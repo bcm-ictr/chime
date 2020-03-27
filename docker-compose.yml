@@ -15,3 +15,17 @@ services:
       - "8001:8000"
     environment:
       - SITE=METHODIST
+  app-bslmc:
+    build: .
+    restart: always
+    ports:
+      - "8002:8000"
+    environment:
+      - SITE=BSLMC
+  app-harrishealth:
+    build: .
+    restart: always
+    ports:
+      - "8003:8000"
+    environment:
+      - SITE=HarrisHealth

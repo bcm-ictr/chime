@@ -43,11 +43,9 @@ def display_header(st, m, p):
         st.markdown(
         """
 <div class="penn-medicine-header__content">
-    <h1>
-        <a href="http://bcm.edu"
+    <a href="http://bcm.edu"
         title="Go to the BCM home page"><img valign="top" width="64" height="64" src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
-BCM - COVID-19 Hospital Impact Model for Epidemics
-</h1>
+    <h1>BCM - COVID-19 Hospital Impact Model for Epidemics</h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -55,13 +53,35 @@ BCM - COVID-19 Hospital Impact Model for Epidemics
     elif os.environ['SITE'] == 'METHODIST':
         st.markdown(
         """
-<div class="penn-medicine-header__content">
-    <h1>
-        <a href="http://bcm.edu"
+    <div class="penn-medicine-header__content">
+    <a href="http://bcm.edu"
         title="Go to the Methodist home page"><img valign="top" height="64"
         src="https://www.houstonmethodist.org/-/media/Images/Header-Images/logo.ashx?h=72&w=216&hash=C4A85BF6D599BC04FE120E1FE46B9BE0"></a>
-Methodist - COVID-19 Hospital Impact Model for Epidemics
-</h1>
+    <h1>Methodist - COVID-19 Hospital Impact Model for Epidemics</h1>
+</div>
+    """,
+        unsafe_allow_html=True,
+    )
+    elif os.environ['SITE'] == 'BSLMC':
+            st.markdown(
+        """
+    <div class="penn-medicine-header__content">
+    <a href="https://www.chistlukeshealth.org/"
+        title="Go to the Methodist home page"><img valign="top" height="64"
+        src="https://www.chistlukeshealth.org/sites/default/files/chi_logo_svg.svg"></a>
+    <h1>BSLMC - COVID-19 Hospital Impact Model for Epidemics</h1>
+</div>
+    """,
+        unsafe_allow_html=True,
+    )
+    elif os.environ['SITE'] == 'HarrisHealth':
+            st.markdown(
+        """
+    <div class="penn-medicine-header__content">
+    <a href="https://www.harrishealth.org/"
+        title="Go to the Methodist home page"><img valign="top" height="64"
+        src="https://www.harrishealth.org/_catalogs/masterpage/HHSInternet/assets/client/assets/logo.jpg"></a>
+    <h1>HarrisHealth - COVID-19 Hospital Impact Model for Epidemics</h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -270,6 +290,17 @@ def show_references_used(st, model, parameters, defaults, notes: str=""):
         '''\
 * [Clinical Characteristics of 138 Hospitalized Patients With 2019 Novel Coronavirus–Infected Pneumonia in Wuhan, China](https://jamanetwork.com/journals/jama/fullarticle/2761044)
   shows 10 days as hospital length of stay for Wuhan. We will use this parameter as default before data from local hospitcals become available.
+
+* [Impact of non-pharmaceutical interventions (NPIs) to reduce COVID19 mortality and healthcare demand](https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf) by Ferguson et al The actual social distancing
+  analysis that is posted by CHIME is not all that relevant to my mind with the Houston environment because it seems almost exclusively
+  focused on impact of social distancing for children and more of the impact here is on businesses (schools are all shut so the impact
+  on kids is nearly 100% social distancing for them except through family environments) The family environments in Houston are much more
+  permissive to spread than I expect they are in the UK. I think distance traveled is a good overall metric.
+
+* [Covid-19 Social Distancing Scoreboard - Unacast](https://www.unacast.com/covid19/social-distancing-scoreboard)
+  According to the website, Harris county has a 43% reduction in travel. I will use that as a metric for base model for BSLMC,
+  which I expect matches well the average behavior.  For Harris Health, I will assume 23% reduction in social distancing and for
+  Methodist I will assume 63% because I think these two entities serve patient populations that have very different needs and behaviors.
 
         '''
     )
