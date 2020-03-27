@@ -3,7 +3,6 @@
 from .defaults import Constants, Regions, RateLos
 import os
 
-Houston = 7100000
 
 
 # QUOTE: Chris Amos
@@ -27,6 +26,10 @@ common_icu_rate = 0.0075
 common_icu_legnth_of_stay = 10
 common_ventilated_rate = 0.005
 common_ventilated_length_of_stay = 10
+
+
+Houston_population_size = 4698619
+
 #
 # NOTE: RateLos is rate + length of stay.
 #
@@ -34,7 +37,7 @@ if os.environ['SITE'] == 'BCM':
     DEFAULTS = Constants(
         # EDIT YOUR DEFAULTS HERE
         region=Regions(
-            houston=Houston,
+            houston=Houston_population_size,
         ),
         current_hospitalized=6,
         doubling_time=common_doubling_time,
@@ -50,7 +53,7 @@ elif os.environ['SITE'] == 'METHODIST':
     DEFAULTS = Constants(
         # EDIT YOUR DEFAULTS HERE
         region=Regions(
-            houston=Houston,
+            houston=Houston_population_size,
         ),
         current_hospitalized=6,
         doubling_time=common_doubling_time,
@@ -66,7 +69,7 @@ elif os.environ['SITE'] == 'BSLMC':
     DEFAULTS = Constants(
         # EDIT YOUR DEFAULTS HERE
         region=Regions(
-            houston=Houston,
+            houston=Houston_population_size,
         ),
         current_hospitalized=6,
         doubling_time=common_doubling_time,
@@ -82,7 +85,7 @@ elif os.environ['SITE'] == 'HarrisHealth':
     DEFAULTS = Constants(
         # EDIT YOUR DEFAULTS HERE
         region=Regions(
-            houston=Houston,
+            houston=Houston_population_size,
         ),
         current_hospitalized=6,
         doubling_time=common_doubling_time,
