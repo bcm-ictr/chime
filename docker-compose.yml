@@ -5,27 +5,27 @@ services:
     build: .
     restart: always
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - SITE=BCM
   app-methodist:
     build: .
     restart: always
     ports:
-      - "8001:8000"
+      - "8002:8000"
     environment:
       - SITE=METHODIST
   app-bslmc:
     build: .
     restart: always
     ports:
-      - "8002:8000"
+      - "8003:8000"
     environment:
       - SITE=BSLMC
   app-harrishealth:
     build: .
     restart: always
     ports:
-      - "8003:8000"
+      - "8004:8000"
     environment:
       - SITE=HarrisHealth
