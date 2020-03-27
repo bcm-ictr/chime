@@ -68,7 +68,8 @@ elif os.environ['SITE'] == 'BSLMC':
         region=Regions(
             houston=Houston,
         ),
-        current_hospitalized=6,
+        # 11 positive with 42 PUI, assuming 4 positive [Amos: 12:29PM, 3/27/20]
+        current_hospitalized=15,
         doubling_time=common_doubling_time,
         known_infected=157,
         n_days=common_n_days,
