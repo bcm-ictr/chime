@@ -98,5 +98,37 @@ elif os.environ['SITE'] == 'HarrisHealth':
         icu=RateLos(common_icu_rate, common_icu_legnth_of_stay),
         ventilated=RateLos(common_ventilated_rate, common_ventilated_length_of_stay),
     )
+elif os.environ['SITE'] == 'HoustonVA':
+    DEFAULTS = Constants(
+        # EDIT YOUR DEFAULTS HERE
+        region=Regions(
+            houston=Houston_population_size,
+        ),
+        current_hospitalized=6,
+        doubling_time=common_doubling_time,
+        known_infected=157,
+        n_days=common_n_days,
+        market_share=0.15,
+        relative_contact_rate=0.23,
+        hospitalized=RateLos(common_hospitalization_rate, common_hospital_length_of_stay),
+        icu=RateLos(common_icu_rate, common_icu_legnth_of_stay),
+        ventilated=RateLos(common_ventilated_rate, common_ventilated_length_of_stay),
+    )
+elif os.environ['SITE'] == 'NationalVA':
+    DEFAULTS = Constants(
+        # EDIT YOUR DEFAULTS HERE
+        region=Regions(
+            houston=Houston_population_size,
+        ),
+        current_hospitalized=6,
+        doubling_time=common_doubling_time,
+        known_infected=157,
+        n_days=common_n_days,
+        market_share=0.15,
+        relative_contact_rate=0.23,
+        hospitalized=RateLos(common_hospitalization_rate, common_hospital_length_of_stay),
+        icu=RateLos(common_icu_rate, common_icu_legnth_of_stay),
+        ventilated=RateLos(common_ventilated_rate, common_ventilated_length_of_stay),
+    )
 else:
     raise ValueError(f'Invalid SITE {os.environ["SITE"]}')

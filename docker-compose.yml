@@ -29,3 +29,17 @@ services:
       - "8004:8000"
     environment:
       - SITE=HarrisHealth
+  app-houston_va:
+    build: .
+    restart: always
+    ports:
+      - "8005:8000"
+    environment:
+      - SITE=HoustonVA
+  app-national_va:
+    build: .
+    restart: always
+    ports:
+      - "8006:8000"
+    environment:
+      - SITE=NationalVA

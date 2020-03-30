@@ -54,7 +54,7 @@ def display_header(st, m, p):
         st.markdown(
         """
     <div class="penn-medicine-header__content">
-    <a href="http://bcm.edu"
+    <a href="https://www.houstonmethodist.org/"
         title="Go to the Methodist home page"><img valign="top" height="64"
         src="https://www.houstonmethodist.org/-/media/Images/Header-Images/logo.ashx?h=72&w=216&hash=C4A85BF6D599BC04FE120E1FE46B9BE0"></a>
     <h1>Methodist - COVID-19 Hospital Impact Model for Epidemics</h1>
@@ -82,6 +82,30 @@ def display_header(st, m, p):
         title="Go to the Methodist home page"><img valign="top" height="64"
         src="https://www.harrishealth.org/_catalogs/masterpage/HHSInternet/assets/client/assets/logo.jpg"></a>
     <h1>HarrisHealth - COVID-19 Hospital Impact Model for Epidemics</h1>
+</div>
+    """,
+        unsafe_allow_html=True,
+    )
+    elif os.environ['SITE'] == 'HoustonVA':
+            st.markdown(
+        """
+    <div class="penn-medicine-header__content">
+    <a href="https://www.houston.va.gov/"
+        title="Go to the Houston VA home page"><img valign="top" height="120"
+        src="https://www.epilepsy.va.gov/SouthWest/Houston/houston_logo_sm.JPG"></a>
+    <h1>Houston VA - COVID-19 Hospital Impact Model for Epidemics</h1>
+</div>
+    """,
+        unsafe_allow_html=True,
+    )
+    elif os.environ['SITE'] == 'NationalVA':
+            st.markdown(
+        """
+    <div class="penn-medicine-header__content">
+    <a href="https://www.va.gov/"
+        title="Go to the National VA home page"><img valign="top" height="120"
+        src="https://www.va.gov/img/design/logo/va-logo.png"></a>
+    <h1>National VA - COVID-19 Hospital Impact Model for Epidemics</h1>
 </div>
     """,
         unsafe_allow_html=True,
