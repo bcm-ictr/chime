@@ -33,7 +33,7 @@ Houston_population_size = 4698619
 #
 # NOTE: RateLos is rate + length of stay.
 #
-if os.environ['SITE'] == 'BCM':
+if os.environ['SITE'] == 'TCH':
     DEFAULTS = Constants(
         # EDIT YOUR DEFAULTS HERE
         region=Regions(

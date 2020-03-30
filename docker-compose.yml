@@ -1,13 +1,13 @@
 version: '3.1'
 
 services:
-  app-bcm:
+  app-tch:
     build: .
     restart: always
     ports:
       - "8001:8000"
     environment:
-      - SITE=BCM
+      - SITE=TCH
   app-methodist:
     build: .
     restart: always

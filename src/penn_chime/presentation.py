@@ -39,13 +39,13 @@ def display_header(st, m, p):
 #     <a id="title" class="penn-medicine-header__title">Penn Medicine - COVID-19 Hospital Impact Model for Epidemics</a>
 # </div>
 
-    if os.environ['SITE'] == 'BCM':
+    if os.environ['SITE'] == 'TCH':
         st.markdown(
         """
 <div class="penn-medicine-header__content">
-    <a href="http://bcm.edu"
-        title="Go to the BCM home page"><img valign="top" width="64" height="64" src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
-    <h1>BCM - COVID-19 Hospital Impact Model for Epidemics</h1>
+    <a href="https://www.texaschildrens.org/"
+        title="Go to the TCH home page"><img valign="top" width="120" height="120" src="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-original-577x577/s3/052012/texas-childrens.jpg"></a>
+    <h1>TCH - COVID-19 Hospital Impact Model for Epidemics</h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -90,7 +90,7 @@ def display_header(st, m, p):
         raise ValueError(f"Invalid SITE {os.environ['SITE']}")
 
     # st.markdown("""
-    #     All sites: [BCM](http://0.0.0.0:8000), [Methodist](http://0.0.0.0:8001)
+    #     All sites: [TCH](http://0.0.0.0:8000), [Methodist](http://0.0.0.0:8001)
     # """)
     # st.markdown(
     #     """**IMPORTANT NOTICE**: Admissions and Census calculations were previously **undercounting**. Please update your reports generated before """ + p.change_date() + """. See more about changes [here](https://github.com/CodeForPhilly/chime/labels/models)."""
