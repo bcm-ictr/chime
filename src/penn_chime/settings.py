@@ -72,7 +72,7 @@ elif os.environ['SITE'] == 'BSLMC':
             houston=Houston_population_size,
         ),
         # 11 positive with 42 PUI, assuming 4 positive [Amos: 12:29PM, 3/27/20]
-        current_hospitalized=15,
+        current_hospitalized=50,
         doubling_time=common_doubling_time,
         known_infected=157,
         n_days=common_n_days,
@@ -88,7 +88,7 @@ elif os.environ['SITE'] == 'HarrisHealth':
         region=Regions(
             houston=Houston_population_size,
         ),
-        current_hospitalized=6,
+        current_hospitalized=29,
         doubling_time=common_doubling_time,
         known_infected=157,
         n_days=common_n_days,
@@ -104,7 +104,7 @@ elif os.environ['SITE'] == 'HoustonVA':
         region=Regions(
             houston=Houston_population_size,
         ),
-        current_hospitalized=6,
+        current_hospitalized=31,
         doubling_time=common_doubling_time,
         known_infected=157,
         n_days=common_n_days,
