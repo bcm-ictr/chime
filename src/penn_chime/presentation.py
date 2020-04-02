@@ -43,9 +43,12 @@ def display_header(st, m, p):
         st.markdown(
         """
 <div class="penn-medicine-header__content">
+    <a href="https://www.bcm.edu"
+        title="Go to the BCM home page"><img valign="top" width="120" height="120" src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
+    <h1>TCH - COVID-19 Hospital Impact Model for Epidemics
     <a href="https://www.texaschildrens.org/"
         title="Go to the TCH home page"><img valign="top" width="120" height="120" src="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-original-577x577/s3/052012/texas-childrens.jpg"></a>
-    <h1>TCH - COVID-19 Hospital Impact Model for Epidemics</h1>
+        </h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -54,10 +57,13 @@ def display_header(st, m, p):
         st.markdown(
         """
     <div class="penn-medicine-header__content">
-    <a href="https://www.houstonmethodist.org/"
+    <a href="https://www.bcm.edu/"
+        title="Go to the BCM home page"><img valign="top" height="120"
+        src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
+    <h1>Methodist - COVID-19 Hospital Impact Model for Epidemics<a href="https://www.houstonmethodist.org/"
         title="Go to the Methodist home page"><img valign="top" height="64"
         src="https://www.houstonmethodist.org/-/media/Images/Header-Images/logo.ashx?h=72&w=216&hash=C4A85BF6D599BC04FE120E1FE46B9BE0"></a>
-    <h1>Methodist - COVID-19 Hospital Impact Model for Epidemics</h1>
+        </h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -66,10 +72,13 @@ def display_header(st, m, p):
             st.markdown(
         """
     <div class="penn-medicine-header__content">
-    <a href="https://www.chistlukeshealth.org/"
+    <a href="https://www.bcm.edu/"
+        title="Go to the BCM home page"><img valign="top" height="120"
+        src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
+    <h1>BSLMC - COVID-19 Hospital Impact Model for Epidemics<a href="https://www.chistlukeshealth.org/"
         title="Go to the Methodist home page"><img valign="top" height="64"
         src="https://www.chistlukeshealth.org/sites/default/files/chi_logo_svg.svg"></a>
-    <h1>BSLMC - COVID-19 Hospital Impact Model for Epidemics</h1>
+        </h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -78,10 +87,13 @@ def display_header(st, m, p):
             st.markdown(
         """
     <div class="penn-medicine-header__content">
-    <a href="https://www.harrishealth.org/"
+    <a href="https://www.bcm.edu/"
+        title="Go to the BCM home page"><img valign="top" height="120"
+        src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
+    <h1>HarrisHealth - COVID-19 Hospital Impact Model for Epidemics<a href="https://www.harrishealth.org/"
         title="Go to the Methodist home page"><img valign="top" height="64"
         src="https://www.harrishealth.org/_catalogs/masterpage/HHSInternet/assets/client/assets/logo.jpg"></a>
-    <h1>HarrisHealth - COVID-19 Hospital Impact Model for Epidemics</h1>
+        </h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -90,10 +102,13 @@ def display_header(st, m, p):
             st.markdown(
         """
     <div class="penn-medicine-header__content">
-    <a href="https://www.houston.va.gov/"
+    <a href="https://www.bcm.edu/"
+        title="Go to the BCM home page"><img valign="top" height="120"
+        src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
+    <h1>Houston VA - COVID-19 Hospital Impact Model for Epidemics<a href="https://www.houston.va.gov/"
         title="Go to the Houston VA home page"><img valign="top" height="120"
         src="https://www.epilepsy.va.gov/SouthWest/Houston/houston_logo_sm.JPG"></a>
-    <h1>Houston VA - COVID-19 Hospital Impact Model for Epidemics</h1>
+        </h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -102,10 +117,13 @@ def display_header(st, m, p):
             st.markdown(
         """
     <div class="penn-medicine-header__content">
-    <a href="https://www.va.gov/"
+    <a href="https://www.bcm.edu/"
+        title="Go to the BCM home page"><img valign="top" height="120"
+        src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
+    <h1>National VA - COVID-19 Hospital Impact Model for Epidemics<a href="https://www.va.gov/"
         title="Go to the National VA home page"><img valign="top" height="120"
         src="https://www.va.gov/img/design/logo/va-logo.png"></a>
-    <h1>National VA - COVID-19 Hospital Impact Model for Epidemics</h1>
+        </h1>
 </div>
     """,
         unsafe_allow_html=True,
