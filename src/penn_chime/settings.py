@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import os
 from datetime import date
 
 from .parameters import Parameters, Regions, Disposition
@@ -20,7 +20,7 @@ def get_defaults():
     # baseline model for 30 days not 60. Other parameters should be as indicated. We will have to change
     # number of Hospitalized COVID-19 patients each time.
 
-    common_doubling_time = 7
+    common_doubling_time = 7.0
     common_n_days = 30
     common_hospital_length_of_stay = 11
     common_hospitalization_rate = 0.044    # 0.044 means 4.4%
@@ -39,8 +39,9 @@ def get_defaults():
         return Parameters(
             population=Houston_population_size,
             current_hospitalized=6,
-            # NEW PARAMETERS
-            known_infected=157
+            # NO LONGER NEEDED?
+            #known_infected=157,
+            # NEW PARAMETER
             date_first_hospitalized=date(2020,3,7),
             #
             doubling_time=common_doubling_time,
@@ -57,7 +58,7 @@ def get_defaults():
             population=Houston_population_size,
             current_hospitalized=6,
             # NO LONGER NEEDED?
-            known_infected=157
+            #known_infected=157,
             # NEW PARAMETER
             date_first_hospitalized=date(2020,3,7),
             #
@@ -75,7 +76,7 @@ def get_defaults():
             population=Houston_population_size,
             current_hospitalized=50,
             # NO LONGER NEEDED?
-            known_infected=157
+            #known_infected=157,
             # NEW PARAMETER
             date_first_hospitalized=date(2020,3,7),
             #
@@ -93,7 +94,7 @@ def get_defaults():
             population=Houston_population_size,
             current_hospitalized=29,
             # NO LONGER NEEDED?
-            known_infected=157
+            #known_infected=157,
             # NEW PARAMETER
             date_first_hospitalized=date(2020,3,7),
             #
@@ -111,7 +112,7 @@ def get_defaults():
             population=Houston_population_size,
             current_hospitalized=31,
             # NO LONGER NEEDED?
-            known_infected=157
+            #known_infected=157,
             # NEW PARAMETER
             date_first_hospitalized=date(2020,3,7),
             #
@@ -129,7 +130,7 @@ def get_defaults():
             population=Houston_population_size,
             current_hospitalized=6,
             # NO LONGER NEEDED?
-            known_infected=157
+            #known_infected=157,
             # NEW PARAMETER
             date_first_hospitalized=date(2020,3,7),
             #

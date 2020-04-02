@@ -1,5 +1,5 @@
 """effectful functions for streamlit io"""
-
+import os
 from typing import Optional
 from datetime import date
 
@@ -32,12 +32,6 @@ hide_menu_style = """
 
 
 def display_header(st, m, p):
-
-    detection_prob_str = (
-        "{detection_prob:.0%}".format(detection_prob=m.detection_probability)
-        if m.detection_probability
-        else "unknown"
-    )
 #     <link rel="stylesheet" href="https://www1.pennmedicine.org/styles/shared/penn-medicine-header.css">
 # <div class="penn-medicine-header__content">
 #     <a href="https://www.pennmedicine.org" class="penn-medicine-header__logo"
