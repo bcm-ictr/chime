@@ -35,7 +35,7 @@ def get_defaults():
     #
     # NOTE: RateLos is rate + length of stay.
     #
-    if os.environ['SITE'] == 'BCM':
+    if os.environ['SITE'] == 'TCH':
         return Parameters(
             population=Houston_population_size,
             current_hospitalized=6,
@@ -73,7 +73,7 @@ def get_defaults():
     elif os.environ['SITE'] == 'BSLMC':
         return Parameters(
             population=Houston_population_size,
-            current_hospitalized=15,
+            current_hospitalized=50,
             # NO LONGER NEEDED?
             known_infected=157
             # NEW PARAMETER
@@ -91,6 +91,42 @@ def get_defaults():
     elif os.environ['SITE'] == 'HarrisHealth':
         return Parameters(
             population=Houston_population_size,
+            current_hospitalized=29,
+            # NO LONGER NEEDED?
+            known_infected=157
+            # NEW PARAMETER
+            date_first_hospitalized=date(2020,3,7),
+            #
+            doubling_time=common_doubling_time,
+            hospitalized=Disposition(common_hospitalization_rate, common_hospital_length_of_stay),
+            icu=Disposition(common_icu_rate, common_icu_legnth_of_stay),
+            infectious_days=14,
+            market_share=0.15,
+            n_days=common_n_days,
+            relative_contact_rate=0.23,
+            ventilated=Disposition(common_ventilated_rate, common_ventilated_length_of_stay),
+        )
+    elif os.environ['SITE'] == 'HoustonVA':
+        return Parameters(
+            population=Houston_population_size,
+            current_hospitalized=31,
+            # NO LONGER NEEDED?
+            known_infected=157
+            # NEW PARAMETER
+            date_first_hospitalized=date(2020,3,7),
+            #
+            doubling_time=common_doubling_time,
+            hospitalized=Disposition(common_hospitalization_rate, common_hospital_length_of_stay),
+            icu=Disposition(common_icu_rate, common_icu_legnth_of_stay),
+            infectious_days=14,
+            market_share=0.15,
+            n_days=common_n_days,
+            relative_contact_rate=0.23,
+            ventilated=Disposition(common_ventilated_rate, common_ventilated_length_of_stay),
+        )
+    elif os.environ['SITE'] == 'NationalVA':
+        return Parameters(
+            population=Houston_population_size,
             current_hospitalized=6,
             # NO LONGER NEEDED?
             known_infected=157
@@ -106,7 +142,6 @@ def get_defaults():
             relative_contact_rate=0.23,
             ventilated=Disposition(common_ventilated_rate, common_ventilated_length_of_stay),
         )
-
     else:
         raise ValueError(f'Invalid SITE {os.environ["SITE"]}')
 

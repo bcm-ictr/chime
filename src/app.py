@@ -2,6 +2,7 @@
 
 import altair as alt  # type: ignore
 import streamlit as st  # type: ignore
+import os
 
 from penn_chime.presentation import (
     display_download_link,
@@ -45,6 +46,7 @@ if st.checkbox("Show more info about this tool"):
     display_more_info(st=st, model=m, parameters=p, defaults=d, notes=notes)
 
 st.subheader("New Admissions")
+<<<<<<< HEAD
 st.markdown("Projected number of **daily** COVID-19 admissions at TMC hospitals. \n\n _NOTE: Now including estimates of prior admissions for comparison._")
 admits_chart = build_admits_chart(alt=alt, admits_floor_df=m.admits_floor_df, max_y_axis=p.max_y_axis)
 st.altair_chart(admits_chart, use_container_width=True)
@@ -53,6 +55,13 @@ display_download_link(
     st,
     filename=f"{p.current_date}_projected_admits.csv",
     df=m.admits_df,
+=======
+st.markdown("Projected number of **daily** COVID-19 admissions at {} hospitals".format(os.environ['SITE']))
+new_admit_chart = new_admissions_chart(alt, m.admits_df, parameters=p)
+st.altair_chart(
+    new_admissions_chart(alt, m.admits_df, parameters=p),
+    use_container_width=True,
+>>>>>>> 861b70ef351b06be909dd6ae828e45fa028afd09
 )
 
 if st.checkbox("Show Projected Admissions in tabular form"):
@@ -67,6 +76,7 @@ if st.checkbox("Show Projected Admissions in tabular form"):
 
 
 st.subheader("Admitted Patients (Census)")
+<<<<<<< HEAD
 st.markdown("Projected **census** of COVID-19 patients, accounting for arrivals and discharges \n\n _NOTE: Now including estimates of prior census for comparison._")
 census_chart = build_census_chart(alt=alt, census_floor_df=m.census_floor_df, max_y_axis=p.max_y_axis)
 st.altair_chart(census_chart, use_container_width=True)
@@ -75,6 +85,10 @@ display_download_link(
     st,
     filename=f"{p.current_date}_projected_census.csv",
     df=m.census_df,
+=======
+st.markdown(
+    "Projected **census** of COVID-19 patients, accounting for arrivals and discharges at {} hospitals".format(os.environ['SITE'])
+>>>>>>> 861b70ef351b06be909dd6ae828e45fa028afd09
 )
 
 if st.checkbox("Show Projected Census in tabular form"):

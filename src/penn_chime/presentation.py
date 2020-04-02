@@ -45,13 +45,13 @@ def display_header(st, m, p):
 #     <a id="title" class="penn-medicine-header__title">Penn Medicine - COVID-19 Hospital Impact Model for Epidemics</a>
 # </div>
 
-    if os.environ['SITE'] == 'BCM':
+    if os.environ['SITE'] == 'TCH':
         st.markdown(
         """
 <div class="penn-medicine-header__content">
-    <a href="http://bcm.edu"
-        title="Go to the BCM home page"><img valign="top" width="64" height="64" src="https://media.bcm.edu/images/2016/0d/logo-bcm-flat.png"></a>
-    <h1>BCM - COVID-19 Hospital Impact Model for Epidemics</h1>
+    <a href="https://www.texaschildrens.org/"
+        title="Go to the TCH home page"><img valign="top" width="120" height="120" src="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-original-577x577/s3/052012/texas-childrens.jpg"></a>
+    <h1>TCH - COVID-19 Hospital Impact Model for Epidemics</h1>
 </div>
     """,
         unsafe_allow_html=True,
@@ -60,7 +60,7 @@ def display_header(st, m, p):
         st.markdown(
         """
     <div class="penn-medicine-header__content">
-    <a href="http://bcm.edu"
+    <a href="https://www.houstonmethodist.org/"
         title="Go to the Methodist home page"><img valign="top" height="64"
         src="https://www.houstonmethodist.org/-/media/Images/Header-Images/logo.ashx?h=72&w=216&hash=C4A85BF6D599BC04FE120E1FE46B9BE0"></a>
     <h1>Methodist - COVID-19 Hospital Impact Model for Epidemics</h1>
@@ -92,11 +92,35 @@ def display_header(st, m, p):
     """,
         unsafe_allow_html=True,
     )
+    elif os.environ['SITE'] == 'HoustonVA':
+            st.markdown(
+        """
+    <div class="penn-medicine-header__content">
+    <a href="https://www.houston.va.gov/"
+        title="Go to the Houston VA home page"><img valign="top" height="120"
+        src="https://www.epilepsy.va.gov/SouthWest/Houston/houston_logo_sm.JPG"></a>
+    <h1>Houston VA - COVID-19 Hospital Impact Model for Epidemics</h1>
+</div>
+    """,
+        unsafe_allow_html=True,
+    )
+    elif os.environ['SITE'] == 'NationalVA':
+            st.markdown(
+        """
+    <div class="penn-medicine-header__content">
+    <a href="https://www.va.gov/"
+        title="Go to the National VA home page"><img valign="top" height="120"
+        src="https://www.va.gov/img/design/logo/va-logo.png"></a>
+    <h1>National VA - COVID-19 Hospital Impact Model for Epidemics</h1>
+</div>
+    """,
+        unsafe_allow_html=True,
+    )
     else:
         raise ValueError(f"Invalid SITE {os.environ['SITE']}")
 
     # st.markdown("""
-    #     All sites: [BCM](http://0.0.0.0:8000), [Methodist](http://0.0.0.0:8001)
+    #     All sites: [TCH](http://0.0.0.0:8000), [Methodist](http://0.0.0.0:8001)
     # """)
     # st.markdown(
     #     """**IMPORTANT NOTICE**: Admissions and Census calculations were previously **undercounting**. Please update your reports generated before """ + p.change_date() + """. See more about changes [here](https://github.com/CodeForPhilly/chime/labels/models)."""
