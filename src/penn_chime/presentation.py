@@ -1,17 +1,23 @@
 """effectful functions for streamlit io"""
 
 from typing import Optional
-import os
-import altair as alt  # type: ignore
-import numpy as np  # type: ignore
-import pandas as pd  # type: ignore
+from datetime import date
 
-from .defaults import Constants, RateLos
-from .utils import add_date_column, dataframe_to_base64
-from .parameters import Parameters
+import altair as alt
+import numpy as np
+import pandas as pd
 
-DATE_FORMAT = "%b, %d"  # see https://strftime.org
-DOCS_URL = "https://code-for-philly.gitbook.io/chime"
+from .constants import (
+    CHANGE_DATE,
+    DATE_FORMAT,
+    DOCS_URL,
+    FLOAT_INPUT_MIN,
+    FLOAT_INPUT_STEP,
+)
+
+from .utils import dataframe_to_base64
+from .parameters import Parameters, Disposition
+from .models import SimSirModel as Model
 
 hide_menu_style = """
         <style>
@@ -99,12 +105,10 @@ def display_header(st, m, p):
     infection_warning_str = ''
     infected_population_warning_str = ''
     st.markdown(
-        """The estimated number of currently infected individuals is **{total_infections:.0f}**. The **{initial_infections}**
-    confirmed cases in the region imply a **{detection_prob_str}** rate of detection. This is based on current inputs for
+        """The estimated number of currently infected individuals is **{total_infections:.0f}**. This is based on current inputs for
     Hospitalizations (**{current_hosp}**), Hospitalization rate (**{hosp_rate:.0%}**), Region size (**{S}**),
     and Hospital market share (**{market_share:.0%}**).
 
-{infection_warning_str}
 {infected_population_warning_str}
 
 An initial doubling time of **{doubling_time}** days and a recovery time of **{recovery_days}** days imply an $R_0$ of
@@ -115,32 +119,33 @@ outbreak **{impact_statement:s} {doubling_time_t:.1f}** days, implying an effect
 and daily growth rate of **{daily_growth_t:.2f}%**.
 """.format(
             total_infections=m.infected,
-            initial_infections=p.known_infected,
-            detection_prob_str=detection_prob_str,
             current_hosp=p.current_hospitalized,
             hosp_rate=p.hospitalized.rate,
             S=p.population,
             market_share=p.market_share,
-            recovery_days=p.recovery_days,
+            recovery_days=p.infectious_days,
             r_naught=m.r_naught,
             doubling_time=p.doubling_time,
             relative_contact_rate=p.relative_contact_rate,
             r_t=m.r_t,
             doubling_time_t=abs(m.doubling_time_t),
-            impact_statement=("halves the infections every" if m.r_t < 1 else "reduces the doubling time to"),
-            daily_growth=m.daily_growth,
-            daily_growth_t=m.daily_growth_t,
-            docs_url=DOCS_URL,
-            infection_warning_str=infection_warning_str,
-            infected_population_warning_str=infected_population_warning_str
+            impact_statement=(
+                "halves the infections every"
+                if m.r_t < 1
+                else "reduces the doubling time to"
+            ),
+            daily_growth=m.daily_growth_rate * 100.0,
+            daily_growth_t=m.daily_growth_rate_t * 100.0,
+            infected_population_warning_str=infected_population_warning_str,
         )
     )
 
     return None
 
 
-class InputWrapper:
+class Input:
     """Helper to separate Streamlit input definition from creation/rendering"""
+
     def __init__(self, st_obj, label, value, kwargs):
         self.st_obj = st_obj
         self.label = label
@@ -151,28 +156,64 @@ class InputWrapper:
         return self.st_obj(self.label, value=self.value, **self.kwargs)
 
 
-class NumberInputWrapper(InputWrapper):
-    def __init__(self, st_obj, label, min_value=None, max_value=None, value=None, step=None, format=None, key=None):
-        kwargs = dict(min_value=min_value, max_value=max_value, step=step, format=format, key=key)
+class NumberInput(Input):
+    def __init__(
+        self,
+        st_obj,
+        label,
+        min_value=None,
+        max_value=None,
+        value=None,
+        step=None,
+        format=None,
+        key=None,
+    ):
+        kwargs = dict(
+            min_value=min_value, max_value=max_value, step=step, format=format, key=key
+        )
         super().__init__(st_obj.number_input, label, value, kwargs)
 
 
-class CheckboxWrapper(InputWrapper):
+class DateInput(Input):
+    def __init__(self, st_obj, label, value=None, key=None):
+        kwargs = dict(key=key)
+        super().__init__(st_obj.date_input, label, value, kwargs)
+
+
+class PercentInput(NumberInput):
+    def __init__(
+        self,
+        st_obj,
+        label,
+        min_value=0.0,
+        max_value=100.0,
+        value=None,
+        step=FLOAT_INPUT_STEP,
+        format="%f",
+        key=None,
+    ):
+        super().__init__(
+            st_obj, label, min_value, max_value, value * 100.0, step, format, key
+        )
+
+    def __call__(self):
+        return super().__call__() / 100.0
+
+
+class CheckboxInput(Input):
     def __init__(self, st_obj, label, value=None, key=None):
         kwargs = dict(key=key)
         super().__init__(st_obj.checkbox, label, value, kwargs)
 
 
-def display_sidebar(st, d: Constants) -> Parameters:
+def display_sidebar(st, d: Parameters) -> Parameters:
     # Initialize variables
     # these functions create input elements and bind the values they are set to
     # to the variables they are set equal to
     # it's kindof like ember or angular if you are familiar with those
 
-    if d.known_infected < 1:
-        raise ValueError("Known cases must be larger than one to enable predictions.")
     st_obj = st.sidebar
-    current_hospitalized_input = NumberInputWrapper(
+    current_hospitalized_input = NumberInput(
         st_obj,
         "Currently Hospitalized COVID-19 Patients",
         min_value=0,
@@ -180,156 +221,177 @@ def display_sidebar(st, d: Constants) -> Parameters:
         step=1,
         format="%i",
     )
-    n_days_input = NumberInputWrapper(
+    n_days_input = NumberInput(
         st_obj,
         "Number of days to project",
         min_value=30,
         value=d.n_days,
-        step=10,
-        format="%i",
-    )
-    doubling_time_input = NumberInputWrapper(
-        st_obj,
-        "Doubling time before social distancing (days)",
-        min_value=0,
-        value=d.doubling_time,
         step=1,
         format="%i",
     )
-    relative_contact_rate_input = NumberInputWrapper(
+    doubling_time_input = NumberInput(
         st_obj,
-        "Social distancing (% reduction in social contact)",
-        min_value=0,
-        max_value=100,
-        value=int(d.relative_contact_rate * 100),
-        step=5,
-        format="%i",
-    )
-    hospitalized_rate_input = NumberInputWrapper(
-        st_obj,
-        "Hospitalization %(total infections)",
-        min_value=0.001,
-        max_value=100.0,
-        value=d.hospitalized.rate * 100,
-        step=1.0,
+        "Doubling time in days (up to today)",
+        min_value=0.5,
+        value=d.doubling_time,
+        step=0.25,
         format="%f",
     )
-    icu_rate_input = NumberInputWrapper(
+    current_date_input = DateInput(
+        st_obj, "Current date (Default is today)", value=d.current_date,
+    )
+    date_first_hospitalized_input = DateInput(
+        st_obj, "Date of first hospitalized case - Enter this date to have chime estimate the initial doubling time",
+        value=d.date_first_hospitalized,
+    )
+    relative_contact_pct_input = PercentInput(
         st_obj,
+        "Social distancing (% reduction in social contact going forward)",
+        min_value=0.0,
+        max_value=100.0,
+        value=d.relative_contact_rate,
+        step=1.0,
+    )
+    hospitalized_pct_input = PercentInput(
+        st_obj, "Hospitalization %(total infections)", value=d.hospitalized.rate,
+    )
+    icu_pct_input = PercentInput(st_obj,
         "ICU %(total infections)",
         min_value=0.0,
-        max_value=100.0,
-        value=d.icu.rate * 100,
-        step=1.0,
-        format="%f",
+        value=d.icu.rate,
+        step=0.05
     )
-    ventilated_rate_input = NumberInputWrapper(
-        st_obj,
-        "Ventilated %(total infections)",
-        min_value=0.0,
-        max_value=100.0,
-        value=d.ventilated.rate * 100,
-        step=1.0,
-        format="%f",
+    ventilated_pct_input = PercentInput(
+        st_obj, "Ventilated %(total infections)", value=d.ventilated.rate,
     )
-    hospitalized_los_input = NumberInputWrapper(
+    hospitalized_days_input = NumberInput(
         st_obj,
-        "Hospital Length of Stay",
+        "Average Hospital Length of Stay (days)",
         min_value=0,
-        value=d.hospitalized.length_of_stay,
+        value=d.hospitalized.days,
         step=1,
         format="%i",
     )
-    icu_los_input = NumberInputWrapper(
+    icu_days_input = NumberInput(
         st_obj,
-        "ICU Length of Stay",
+        "Average Days in ICU",
         min_value=0,
-        value=d.icu.length_of_stay,
+        value=d.icu.days,
         step=1,
         format="%i",
     )
-    ventilated_los_input = NumberInputWrapper(
+    ventilated_days_input = NumberInput(
         st_obj,
-        "Vent Length of Stay",
+        "Average Days on Ventilator",
         min_value=0,
-        value=d.ventilated.length_of_stay,
+        value=d.ventilated.days,
         step=1,
         format="%i",
     )
-    market_share_input = NumberInputWrapper(
+    market_share_pct_input = PercentInput(
         st_obj,
         "Hospital Market Share (%)",
-        min_value=0.001,
-        max_value=100.0,
-        value=d.market_share * 100,
-        step=1.0,
-        format="%f",
+        min_value=0.5,
+        value=d.market_share,
     )
-    population_input = NumberInputWrapper(
+    population_input = NumberInput(
         st_obj,
         "Regional Population",
         min_value=1,
-        value=d.region.population,
-        step=100000,
+        value=(d.population),
+        step=1,
         format="%i",
     )
-    known_infected_input = NumberInputWrapper(
+    infectious_days_input = NumberInput(
         st_obj,
-        "Currently Known Regional Infections (only used to compute detection rate - does not change projections)",
+        "Infectious Days",
         min_value=0,
-        value=d.known_infected,
-        step=10,
+        value=d.infectious_days,
+        step=1,
         format="%i",
     )
-    as_date_input = CheckboxWrapper(st_obj, "Present result as dates instead of days", value=False)
-    max_y_axis_set_input = CheckboxWrapper(st_obj, "Set the Y-axis on graphs to a static value")
-    max_y_axis_input = NumberInputWrapper(st_obj, "Y-axis static value", value=500, format="%i", step=25)
-
+    max_y_axis_set_input = CheckboxInput(
+        st_obj, "Set the Y-axis on graphs to a static value"
+    )
+    max_y_axis_input = NumberInput(
+        st_obj, "Y-axis static value", value=500, format="%i", step=25
+    )
 
     # Build in desired order
-    st.sidebar.markdown("### Regional Parameters [ℹ]({docs_url}/what-is-chime/parameters)".format(docs_url=DOCS_URL))
+    st.sidebar.markdown(
+        """**CHIME [v1.1.2](https://github.com/CodeForPhilly/chime/releases/tag/v1.1.1) ({change_date})**""".format(
+            change_date=CHANGE_DATE
+        )
+    )
+
+    st.sidebar.markdown(
+        "### Hospital Parameters [ℹ]({docs_url}/what-is-chime/parameters#hospital-parameters)".format(
+            docs_url=DOCS_URL
+        )
+    )
     population = population_input()
-    market_share = market_share_input()
-    known_infected = known_infected_input()
+    market_share = market_share_pct_input()
+    # known_infected = known_infected_input()
     current_hospitalized = current_hospitalized_input()
 
-    st.sidebar.markdown("### Spread and Contact Parameters [ℹ]({docs_url}/what-is-chime/parameters)"
-                        .format(docs_url=DOCS_URL))
-    doubling_time = doubling_time_input()
-    relative_contact_rate = relative_contact_rate_input()
+    st.sidebar.markdown(
+        "### Spread and Contact Parameters [ℹ]({docs_url}/what-is-chime/parameters#spread-and-contact-parameters)".format(
+            docs_url=DOCS_URL
+        )
+    )
 
-    st.sidebar.markdown("### Severity Parameters [ℹ]({docs_url}/what-is-chime/parameters)".format(docs_url=DOCS_URL))
-    hospitalized_rate = hospitalized_rate_input()
-    icu_rate = icu_rate_input()
-    ventilated_rate = ventilated_rate_input()
-    hospitalized_los = hospitalized_los_input()
-    icu_los = icu_los_input()
-    ventilated_los = ventilated_los_input()
+    if st.sidebar.checkbox(
+        "I know the date of the first hospitalized case."
+    ):
+        date_first_hospitalized = date_first_hospitalized_input()
+        doubling_time = None
+    else:
+        doubling_time = doubling_time_input()
+        date_first_hospitalized = None
 
-    st.sidebar.markdown("### Display Parameters [ℹ]({docs_url}/what-is-chime/parameters)".format(docs_url=DOCS_URL))
+    relative_contact_rate = relative_contact_pct_input()
+
+    st.sidebar.markdown(
+        "### Severity Parameters [ℹ]({docs_url}/what-is-chime/parameters#severity-parameters)".format(
+            docs_url=DOCS_URL
+        )
+    )
+    hospitalized_rate = hospitalized_pct_input()
+    icu_rate = icu_pct_input()
+    ventilated_rate = ventilated_pct_input()
+    infectious_days = infectious_days_input()
+    hospitalized_days = hospitalized_days_input()
+    icu_days = icu_days_input()
+    ventilated_days = ventilated_days_input()
+
+    st.sidebar.markdown(
+        "### Display Parameters [ℹ]({docs_url}/what-is-chime/parameters#display-parameters)".format(
+            docs_url=DOCS_URL
+        )
+    )
     n_days = n_days_input()
     max_y_axis_set = max_y_axis_set_input()
-    as_date = as_date_input()
 
     max_y_axis = None
     if max_y_axis_set:
         max_y_axis = max_y_axis_input()
 
-    return Parameters(
-        as_date=as_date,
-        current_hospitalized=current_hospitalized,
-        market_share=market_share,
-        known_infected=known_infected,
-        doubling_time=doubling_time,
+    current_date = current_date_input()
 
+    return Parameters(
+        current_hospitalized=current_hospitalized,
+        hospitalized=Disposition(hospitalized_rate, hospitalized_days),
+        icu=Disposition(icu_rate, icu_days),
+        relative_contact_rate=relative_contact_rate,
+        ventilated=Disposition(ventilated_rate, ventilated_days),
+        current_date=current_date,
+        date_first_hospitalized=date_first_hospitalized,
+        doubling_time=doubling_time,
+        infectious_days=infectious_days,
+        market_share=market_share,
         max_y_axis=max_y_axis,
         n_days=n_days,
-        relative_contact_rate=relative_contact_rate / 100.0,
         population=population,
-
-        hospitalized=RateLos(hospitalized_rate/ 100.0, hospitalized_los),
-        icu=RateLos(icu_rate/ 100.0, icu_los),
-        ventilated=RateLos(ventilated_rate/ 100.0, ventilated_los),
     )
 
 def show_references_used(st, model, parameters, defaults, notes: str=""):
@@ -355,7 +417,9 @@ def show_references_used(st, model, parameters, defaults, notes: str=""):
         '''
     )
 
-def show_more_info_about_this_tool(st, model, parameters, defaults, notes: str = ""):
+def display_more_info(
+    st, model: Model, parameters: Parameters, defaults: Parameters, notes: str = "",
+):
     """a lot of streamlit writing to screen."""
     st.subheader(
         "[Discrete-time SIR modeling](https://mathworld.wolfram.com/SIRModel.html) of infections/recovery"
@@ -393,7 +457,7 @@ $$\\beta$$ can be interpreted as the _effective contact rate_:
 $\\gamma$ is the inverse of the mean recovery time, in days.  I.e.: if $\\gamma = 1/{recovery_days}$, then the average infection will clear in {recovery_days} days.
 
 An important descriptive parameter is the _basic reproduction number_, or $R_0$.  This represents the average number of people who will be infected by any given infected person.  When $R_0$ is greater than 1, it means that a disease will grow.  Higher $R_0$'s imply more rapid growth.  It is defined as """.format(
-            recovery_days=int(parameters.recovery_days)
+            recovery_days=int(parameters.infectious_days)
         )
     )
     st.latex("R_0 = \\beta /\\gamma")
@@ -425,7 +489,7 @@ We need to express the two parameters $\\beta$ and $\\gamma$ in terms of quantit
 - To estimate $$\\beta$$ directly, we'd need to know transmissibility and social contact rates.  since we don't know these things, we can extract it from known _doubling times_.  The AHA says to expect a doubling time $T_d$ of 7-10 days. That means an early-phase rate of growth can be computed by using the doubling time formula:
 """.format(
             doubling_time=parameters.doubling_time,
-            recovery_days=parameters.recovery_days,
+            recovery_days=parameters.infectious_days,
             r_naught=model.r_naught,
             relative_contact_rate=parameters.relative_contact_rate,
             doubling_time_t=model.doubling_time_t,
@@ -446,12 +510,6 @@ $$\\beta = (g + \\gamma)$$.
 """.format(
             notes=notes
         )
-        + "- "
-        + "| \n".join(
-            f"{key} = {value} "
-            for key, value in defaults.region.__dict__.items()
-            if key != "_s"
-        )
     )
     return None
 
@@ -460,7 +518,9 @@ def write_definitions(st):
     st.subheader("Guidance on Selecting Inputs")
     st.markdown(
         """**This information has been moved to the
-[User Documentation]({docs_url}/what-is-chime/parameters#guidance-on-selecting-inputs)**""".format(docs_url=DOCS_URL)
+[User Documentation]({docs_url}/what-is-chime/parameters)**""".format(
+            docs_url=DOCS_URL
+        )
     )
 
 
@@ -469,6 +529,7 @@ def write_footer(st):
     st.markdown(
         """* AHA Webinar, Feb 26, James Lawler, MD, an associate professor University of Nebraska Medical Center, What Healthcare Leaders Need To Know: Preparing for the COVID-19
 * We would like to recognize the valuable assistance in consultation and review of model assumptions by Michael Z. Levy, PhD, Associate Professor of Epidemiology, Department of Biostatistics, Epidemiology and Informatics at the Perelman School of Medicine
+* Finally we'd like to thank [Code for Philly](https://codeforphilly.org/) and the many members of the open-source community that [contributed](https://github.com/CodeForPhilly/chime/graphs/contributors) to this project.
     """
     )
     st.markdown(
@@ -487,85 +548,13 @@ def write_footer(st):
 # </div>
 
 
-def show_additional_projections(
-    st, alt, charting_func, model, parameters
-):
-    st.subheader(
-        "The number of infected and recovered individuals in the hospital catchment region at any given moment"
-    )
-
-    st.altair_chart(
-        charting_func(
-            alt,
-            model=model,
-            parameters=parameters
-        ),
-        use_container_width=True,
-    )
-
-
-##########
-# Tables #
-##########
-
-
-def draw_projected_admissions_table(
-    st, projection_admits: pd.DataFrame, labels, day_range, as_date: bool = False
-):
-    admits_table = projection_admits[np.mod(projection_admits.index, day_range) == 0].copy()
-    admits_table["day"] = admits_table.index
-    admits_table.index = range(admits_table.shape[0])
-    admits_table = admits_table.fillna(0).astype(int)
-
-    if as_date:
-        admits_table = add_date_column(
-            admits_table, drop_day_column=True, date_format=DATE_FORMAT
-        )
-    admits_table.rename(labels)
-    st.table(admits_table)
-    return None
-
-
-def draw_census_table(st, census_df: pd.DataFrame, labels, day_range, as_date: bool = False):
-    census_table = census_df[np.mod(census_df.index, day_range) == 0].copy()
-    census_table.index = range(census_table.shape[0])
-    census_table.loc[0, :] = 0
-    census_table = census_table.dropna().astype(int)
-
-    if as_date:
-        census_table = add_date_column(
-            census_table, drop_day_column=True, date_format=DATE_FORMAT
-        )
-
-    census_table.rename(labels)
-    st.table(census_table)
-    return None
-
-
-def draw_raw_sir_simulation_table(st, model, parameters):
-    as_date = parameters.as_date
-    projection_area = model.raw_df
-    infect_table = (projection_area.iloc[::7, :]).apply(np.floor)
-    infect_table.index = range(infect_table.shape[0])
-    infect_table["day"] = infect_table.day.astype(int)
-
-    if as_date:
-        infect_table = add_date_column(
-            infect_table, drop_day_column=True, date_format=DATE_FORMAT
-        )
-
-    st.table(infect_table)
-    build_download_link(st,
-        filename="raw_sir_simulation_data.csv",
-        df=projection_area,
-        parameters=parameters
-    )
-
-def build_download_link(st, filename: str, df: pd.DataFrame, parameters: Parameters):
-    if parameters.as_date:
-        df = add_date_column(df, drop_day_column=True, date_format="%Y-%m-%d")
-
+def display_download_link(st, filename: str, df: pd.DataFrame):
     csv = dataframe_to_base64(df)
-    st.markdown("""
-        <a download="{filename}" href="data:file/csv;base64,{csv}">Download full table as CSV</a>
-""".format(csv=csv,filename=filename), unsafe_allow_html=True)
+    st.markdown(
+        """
+        <a download="{filename}" href="data:file/csv;base64,{csv}">Download {filename}</a>
+""".format(
+            csv=csv, filename=filename
+        ),
+        unsafe_allow_html=True,
+    )
