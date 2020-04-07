@@ -451,6 +451,8 @@ def show_references_used(st, model, parameters, defaults, notes: str=""):
   Methodist I will assume 63% because I think these two entities serve patient populations that have very different needs and behaviors.
 
 * [Estimates of the severity of COVID-19 disease](https://www.medrxiv.org/content/10.1101/2020.03.09.20033357v1)
+
+* [Projecting the Impact of the SARS-CoV-2 in TMC](https://rdl-covdws-p01.ad.bcm.edu/sites/default/files/2020-04/Projecting%20the%20Impact%20of%20the%20SARS-CoV-2%20in%20TMC.pptx)
         '''
     )
 
