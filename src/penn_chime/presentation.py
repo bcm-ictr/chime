@@ -450,6 +450,7 @@ def show_references_used(st, model, parameters, defaults, notes: str=""):
   which I expect matches well the average behavior.  For Harris Health, I will assume 23% reduction in social distancing and for
   Methodist I will assume 63% because I think these two entities serve patient populations that have very different needs and behaviors.
 
+* [Estimates of the severity of COVID-19 disease](https://www.medrxiv.org/content/10.1101/2020.03.09.20033357v1)
         '''
     )
 
