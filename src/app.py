@@ -38,7 +38,7 @@ display_header(st, m, p)
 
 if st.checkbox("Show references that we used to justify the default parameters"):
     notes = "We used information from ... to justify the default parameters"
-    show_references_used(st=st, model=m, parameters=p, defaults=DEFAULTS, notes=notes)
+    show_references_used(st=st, model=m, parameters=p, defaults=d, notes=notes)
 
 if st.checkbox("Show more info about this tool"):
     notes = "The total size of the susceptible population will be the entire catchment area for our hospitals."
