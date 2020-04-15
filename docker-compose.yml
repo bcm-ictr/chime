@@ -2,42 +2,60 @@ version: '3.1'
 
 services:
   app-tch:
-    build: .
+    build:
+      context: .
+      args:
+        SITE: TCH
     restart: always
     ports:
       - "8001:8000"
     environment:
       - SITE=TCH
   app-methodist:
-    build: .
+    build:
+      context: .
+      args:
+        SITE: METHODIST
     restart: always
     ports:
       - "8002:8000"
     environment:
       - SITE=METHODIST
   app-bslmc:
-    build: .
+    build:
+      context: .
+      args:
+        SITE: BSLMC
     restart: always
     ports:
       - "8003:8000"
     environment:
       - SITE=BSLMC
   app-harrishealth:
-    build: .
+    build:
+      context: .
+      args:
+        SITE: HarrisHealth
     restart: always
     ports:
       - "8004:8000"
     environment:
       - SITE=HarrisHealth
   app-houston_va:
-    build: .
+    build:
+      context: .
+      args:
+        SITE: HoustonVA
     restart: always
     ports:
       - "8005:8000"
     environment:
       - SITE=HoustonVA
   app-national_va:
-    build: .
+    build:
+      context: .
+      args:
+        SITE: NationalVA
     restart: always
     ports:
       - "8006:8000"

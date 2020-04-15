@@ -1,5 +1,6 @@
 FROM python:3.7.7-slim-buster
-ENV PARAMETERS=./defaults/webapp.cfg
+ARG SITE
+ENV PARAMETERS=./defaults/webapp-$SITE.cfg
 WORKDIR /app
 COPY README.md .
 COPY setup.cfg .
